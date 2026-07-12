@@ -98,7 +98,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 /* ============================= DATABASE SETUP (SQLITE) ============================= */
-const db = new sqlite3.Database('/app/data/database.db'), (err) => {
+const db = new sqlite3.Database('/app/data/database.db', (err) => {
   if (err) console.error(err.message);
   console.log('Terhubung ke database SQLite fisik (database.db).');
 });
