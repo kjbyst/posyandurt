@@ -1,0 +1,19 @@
+{
+  "name": "buku-kas-posyandu-rt",
+  "version": "1.0.0",
+  "description": "Aplikasi Buku Kas Posyandu RT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-sqlite3": "^0.9.15",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
