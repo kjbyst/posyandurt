@@ -62,7 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // rawan bocor memori dan sesi hilang tiap restart server. Gunakan SQLite store
 // yang konsisten dengan database yang sudah dipakai aplikasi ini.
 app.use(session({
-    store: new SQLiteStore({ db: 'sessions.db', dir: __dirname }),
+    store: new SQLiteStore({ db: 'sessions.db', dir: 'app/data' }),
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -98,7 +98,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 /* ============================= DATABASE SETUP (SQLITE) ============================= */
-const db = new sqlite3.Database(path.join(__dirname, 'database.db'), (err) => {
+const db = new sqlite3.Database('/app/data/database.db'), (err) => {
   if (err) console.error(err.message);
   console.log('Terhubung ke database SQLite fisik (database.db).');
 });
