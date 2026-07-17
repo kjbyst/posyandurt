@@ -801,8 +801,8 @@ function renderWargaTab(){
       <div class="panel-title">${editWarga ? 'Edit Data Warga' : 'Tambah Warga'}</div>
       <div class="panel-sub">${editWarga ? `Mengubah data informasi untuk warga: <b>${esc(editWarga.nama)}</b>` : 'Isi data warga baru, lalu tekan Tambah.'}</div>
       <div class="form-row">
-        <div class="field"><label>Nama Warga</label><input id="nw-nama" type="text" placeholder="Contoh: Siti Aminah" value="${editWarga ? esc(editWarga.nama) : ''}" /></div>
-        <div class="field small"><label>No. Rumah</label><input id="nw-rumah" type="text" placeholder="Contoh: 12A" value="${editWarga ? esc(editWarga.nomorRumah) : ''}" /></div>
+        <div class="field"><label>Nama Warga</label><input id="nw-nama" type="text" placeholder="Contoh: Indriyaningrum Sulistiyowati" value="${editWarga ? esc(editWarga.nama) : ''}" /></div>
+        <div class="field small"><label>No. Rumah</label><input id="nw-rumah" type="text" placeholder="Contoh: 1077" value="${editWarga ? esc(editWarga.nomorRumah) : ''}" /></div>
         <div class="field small"><label>Iuran</label>
           <select id="nw-iuran">
             <option value="2000" ${editWarga && editWarga.jenisIuran === 2000 ? 'selected' : ''}>Rp 2.000</option>
