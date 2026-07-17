@@ -235,6 +235,17 @@ app.post('/api/warga', isAuthenticated, isAllowedToMutate, (req, res) => {
     });
 });
 
+app.use(session({
+  store: new pgSession({
+    pool: pgPool, // pastikan pool koneksi Anda sudah terhubung ke Neon
+    tableName: 'session',
+    createTableIfMissing: true // <--- Tambahkan baris ini
+  }),
+  secret: 'rahasia-anda',
+  resave: false,
+  saveUninitialized: false
+}));
+
 // ... (Tambahkan rute lainnya di sini dengan logika yang sama)
 
 app.listen(PORT, () => {
