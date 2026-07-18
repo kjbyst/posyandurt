@@ -343,6 +343,7 @@
       padding: 0 !important;
       margin: 0 !important;
       background: transparent !important;
+      display: block !important;
     }
     .panel-title { font-size: 20px; margin-bottom: 5px; }
     .panel-sub { font-size: 12px; margin-bottom: 20px; color: #000; }
@@ -350,8 +351,7 @@
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
     thead th { border-bottom: 2px solid #000; color: #000; padding: 8px; }
     tbody td { border-bottom: 1px solid #ccc; padding: 8px; }
-    .total-row td { border-top: 2px solid #000; background: transparent !important; color: #000; }
-    th:last-child, td:last-child { display: none !important; }
+    .total-row td { border-top: 2px solid #000 !important; background: transparent !important; color: #000 !important; display: table-cell !important; }
   }
 
   /* ============================= MEDIA QUERIES ============================= */
@@ -445,8 +445,6 @@ async function loadData(){
     } else {
       const data = await response.json();
       state.loggedIn = true; 
-      // FIX: currentUser sekarang selalu disinkronkan dari server, bukan hanya
-      // saat login, supaya pembatasan tampilan role tidak hilang setelah refresh halaman.
       state.currentUser = data.currentUser || state.currentUser;
       state.warga = data.warga || [];
       state.pemasukan = data.pemasukan || [];
@@ -489,14 +487,12 @@ function render(){
     return;
   }
 
-  // Wajib ganti password (mis. password awal admin yang digenerate otomatis oleh server)
   if(state.forceReset){
     app.innerHTML = renderForceReset();
     bindForceReset();
     return;
   }
   
-  // Keamanan Navigasi Frontend: Jika tab aktif adalah area terlarang bagi viewer, paksa reset ke dashboard
   if(state.currentUser && state.currentUser.role === 'viewer') {
      if(state.activeTab !== 'dashboard' && state.activeTab !== 'report' && state.activeTab !== 'users') {
         state.activeTab = 'dashboard';
@@ -537,15 +533,10 @@ function bindLogin(){
       const u = document.getElementById('in-user').value.trim();
       const p = document.getElementById('in-pass').value;
 
-      // Tampilkan status "memproses" agar tombol tidak terlihat diam/tidak
-      // merespons saat request sedang berjalan (sebelumnya tidak ada indikator
-      // sama sekali, sehingga request yang lambat terlihat seperti tidak terjadi apa-apa).
       btnLogin.disabled = true;
       const originalLabel = btnLogin.textContent;
       btnLogin.textContent = 'Memproses...';
 
-      // Batasi waktu tunggu di sisi browser juga, supaya kalau server macet/hang,
-      // pengguna tetap dapat notifikasi jelas alih-alih menunggu tanpa batas.
       const controller = new AbortController();
       const clientTimeout = setTimeout(() => controller.abort(), 10000);
 
@@ -1689,8 +1680,6 @@ function renderUsersTab(){
   const isViewer = state.currentUser && state.currentUser.role === 'viewer';
   const isAdmin = state.currentUser && state.currentUser.role === 'administrator';
   const editUser = state.editingUserId ? state.users.find(u => u.id === state.editingUserId) : null;
-  // Self-service: user non-admin sedang mengedit akunnya sendiri -> backend mewajibkan
-  // verifikasi password lama sebelum password baru diterima.
   const isSelfEdit = !!(editUser && state.currentUser && editUser.id === state.currentUser.id && !isAdmin);
   
   const rows = state.users.map(u => `
@@ -1731,7 +1720,6 @@ function renderUsersTab(){
         </div>` : ''}
         <div class="field">
           <label>Password Baru / Edit</label>
-          <!-- Perbaikan keamanan UI: Value dikosongkan agar string obfuscated tidak terkirim tanpa sengaja -->
           <input id="us-pass" type="password" autocomplete="new-password" placeholder="${editUser ? 'Kosongkan jika tidak ingin ganti sandi' : 'Ketik kata sandi user (min. 8 karakter)'}" value="" />
         </div>
         <div class="field small">
@@ -1767,7 +1755,6 @@ function bindUsersTab(){
       const currentPasswordEl = document.getElementById('us-current-pass');
       const currentPassword = currentPasswordEl ? currentPasswordEl.value : undefined;
 
-      // Perbaikan logika: saat membuat user BARU, password wajib. Saat EDIT, opsional.
       if(!state.editingUserId && (!username || !password)){
         alert("Mohon melengkapi formulir nama pengguna dan sandi untuk pembuatan akun baru."); return;
       }
